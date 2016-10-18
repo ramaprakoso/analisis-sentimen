@@ -1,0 +1,2 @@
+postingan pertama
+

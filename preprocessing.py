@@ -1,7 +1,33 @@
 import re,string
+import xlrd
+import openpyxl
 from nltk.tokenize import word_tokenize
-filename='tweet1clean.csv'
-sname='stopword.txt'
+
+def fileprocess(filenameInput='tweet1clean.xlsx',filenamePreprocess='data_pre.xlsx'):
+    # buka file input
+    fileTrain = xlrd.open_workbook(filenameInput)
+    dataTrain = fi
+    leTrain.sheet_by_index(0)
+    rowLen = dataTrain.nrows
+
+    # siapkan file output
+    filePreprocessed = openpyxl.Workbook()
+    dataPreprocessed = filePreprocessed.active
+
+    # untuk setiap data input, lakukan preprocessing
+    # dan hasil preprocessing simpan ke dalam data output
+    for i in range(rowLen):
+        data_i = dataTrain.cell(i,0).value
+        class_i = dataTrain.cell(i, 1).value
+        prep = preprocess(data_i)
+
+        if prep:
+            for i in range(len(prep)):
+                dataPreprocessed.append([''.join(prep[i]), class_i])
+
+    # simpan file output
+    filePreprocessed.save(filenamePreprocess)
+    return dataPreprocessed
 def preprocess(tweet):
 	#hapus url 
 	tweet=hapus_url(tweet) 
@@ -182,52 +208,5 @@ def stemming(token,dasar):
 				token = awalanKedua(token)
 				if token in dasar :
 					return token
-		return token 
-if __name__=='__main__': 
-	with open(filename,"r") as f:
-		data=f.read()
-	
-	print preprocess(data) 
-			
-			
-			#stopwordDel()	
+		return token 		
 		
-		
-			
-	"""
-	def get_token(self,filename,fname):
-		#open file tweet 
-		with open(filename,"r") as f:
-			data=f.read().split('\n')
-			tampung=[]
-			for text in data: 
-				#remove url
-				result=re.sub(r"http\S+", "", text)
-				#remove number 
-				result=re.sub(r'\w*\d\w*', '',result).strip()
-				#remove punctuation 
-				result=' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)"," ",result).split())
-				tampung.append(result) 
-			#stopword removing with token  
-			stop=[unicode(x.strip(),'utf-8') for x in open(fname,'r').read().split('\n')]
-			t=[]
-			token=[word_tokenize(i) for i in tampung]
-			for i in token: 
-				for kata in i: 
-					if kata not in stop: 
-						t.append(kata)
-			return t
-		with open('kbba.txt','r') as k : 
-			kbba=k.read().split('\n')	
-			dic={}
-			for i in kbba: 
-				(key,val)=i.split('\t')
-				dic[str(key)]=val
-			u=[]
-			for word in t: 
-				for kandidat in dic: 
-					if kandidat in word: 
-						word=word.replace(kandidat,dic[kandidat])
-				print word
-			print u
-		"""

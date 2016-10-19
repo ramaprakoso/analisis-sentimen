@@ -3,11 +3,10 @@ import xlrd
 import openpyxl
 from nltk.tokenize import word_tokenize
 
-def fileprocess(filenameInput='tweet1clean.xlsx',filenamePreprocess='data_pre.xlsx'):
+def fileprocess(filenameInput='tweet.xlsx',filenamePreprocess='data_pre.xlsx'):
     # buka file input
     fileTrain = xlrd.open_workbook(filenameInput)
-    dataTrain = fi
-    leTrain.sheet_by_index(0)
+    dataTrain = fileTrain.sheet_by_index(0)
     rowLen = dataTrain.nrows
 
     # siapkan file output
@@ -24,7 +23,6 @@ def fileprocess(filenameInput='tweet1clean.xlsx',filenamePreprocess='data_pre.xl
         if prep:
             for i in range(len(prep)):
                 dataPreprocessed.append([''.join(prep[i]), class_i])
-
     # simpan file output
     filePreprocessed.save(filenamePreprocess)
     return dataPreprocessed
@@ -38,14 +36,13 @@ def preprocess(tweet):
 	#token 
 	tokens=tokenize(tweet)
 	tokens=kbbi(tokens)
-	#tokens=['ciuman','mencuri','membelanjakan','mempekerjakan','melayani','mengatur','merasakan','memeriksa']
+	tokens=stopwordDel(tokens)	
 	dasar=[line.strip('\n')for line in open('kamus/rootword.txt')]
 	nonKataDasar=list(set(tokens)-set(dasar))
 	kataDasar=list(set(tokens)-set(nonKataDasar))
 	for i in range(0,len(nonKataDasar)): 
 		nonKataDasar[i]=stemming(nonKataDasar[i],dasar)
 	tokens=list(set(nonKataDasar+kataDasar))
-	#tokens=stopwordDel(token)	
 	return tokens   
 def hapus_url(tweet): 
 	url=re.sub(r'http\S',"",tweet)
@@ -64,7 +61,7 @@ def stopwordDel(token):
 	noise=[noise.strip('\n').strip('\r') for noise in open('kamus/noise.txt')]
 	tampung=[]
 	for i in range(0,len(token)): 
-		if token[i] not in stopword: 
+		if token[i] not in stopword and token[i] not in noise: 
 			tampung.append(token[i])
 	return tampung
 def kbbi(token): 

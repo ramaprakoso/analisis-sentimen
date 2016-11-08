@@ -1,8 +1,9 @@
 import re,string
 import xlrd
 import openpyxl
+import csv
 from nltk.tokenize import word_tokenize
-
+"""
 def fileprocess(filenameInput='tweet.xlsx',filenamePreprocess='data_pre.xlsx'):
     # buka file input
     fileTrain = xlrd.open_workbook(filenameInput)
@@ -26,6 +27,7 @@ def fileprocess(filenameInput='tweet.xlsx',filenamePreprocess='data_pre.xlsx'):
     # simpan file output
     filePreprocessed.save(filenamePreprocess)
     return dataPreprocessed
+"""
 def preprocess(tweet):
 	#hapus url 
 	tweet=hapus_url(tweet) 
@@ -33,17 +35,35 @@ def preprocess(tweet):
 	tweet=hapus_tanda(tweet)
 	#hapus angka 
 	tweet=hapus_angka(tweet)
-	#token 
-	tokens=tokenize(tweet)
-	tokens=kbbi(tokens)
-	tokens=stopwordDel(tokens)	
+		
+	"""
 	dasar=[line.strip('\n')for line in open('kamus/rootword.txt')]
 	nonKataDasar=list(set(tokens)-set(dasar))
 	kataDasar=list(set(tokens)-set(nonKataDasar))
 	for i in range(0,len(nonKataDasar)): 
 		nonKataDasar[i]=stemming(nonKataDasar[i],dasar)
-	tokens=list(set(nonKataDasar+kataDasar))
-	return tokens   
+	tokens=list(set(nonKataDasar+kataDasar))"""
+	return tweet   
+def get_fitur(tweet): 
+	#token 
+	tokens=tokenize(tweet)
+	tokens=kbbi(tokens)
+	tokens=stopwordDel(tokens)
+	return tokens
+def fitur_ekstraksi(inpTweet): 
+	tweets=[]
+	for row in inpTweet: 
+		tweet=row[0]
+		label=row[1]
+		pre_tweet=preprocess(tweet)
+		featureVector=get_fitur(pre_tweet)
+		tweets.append((featureVector,label))
+	return tweets
+def fiturlist_negatif(): 
+	pass
+def fiturlist_positif():
+	positif=[word.strip('\n').strip('\r') for word in open('kamus/positive_keyword.txt')]
+	return positif 
 def hapus_url(tweet): 
 	url=re.sub(r'http\S',"",tweet)
 	return url 
@@ -205,5 +225,9 @@ def stemming(token,dasar):
 				token = awalanKedua(token)
 				if token in dasar :
 					return token
-		return token 		
-		
+		return token 			
+if __name__ == '__main__':
+	fp = open('twiit.csv', 'r')
+	line = fp.read()
+	inpTweets = csv.reader(open('twiit.csv', 'rb'), delimiter=';', quotechar='|')
+	fitur_ekstraksi(inpTweets)

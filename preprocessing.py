@@ -230,4 +230,6 @@ if __name__ == '__main__':
 	fp = open('twiit.csv', 'r')
 	line = fp.read()
 	inpTweets = csv.reader(open('twiit.csv', 'rb'), delimiter=';', quotechar='|')
-	fitur_ekstraksi(inpTweets)
+	
+	print fitur_ekstraksi(inpTweets)
+	

@@ -806,6 +806,7 @@ nyokap	ibu
 o/	oleh
 ogah	tidak mau
 ok	ok
+okt	oktober
 ol	online
 omdo	omong doang
 ongkir	ongkos kirim

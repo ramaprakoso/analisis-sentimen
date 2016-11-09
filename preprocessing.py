@@ -35,7 +35,6 @@ def preprocess(tweet):
 	tweet=hapus_tanda(tweet)
 	#hapus angka 
 	tweet=hapus_angka(tweet)
-		
 	"""
 	dasar=[line.strip('\n')for line in open('kamus/rootword.txt')]
 	nonKataDasar=list(set(tokens)-set(dasar))
@@ -50,6 +49,11 @@ def get_fitur(tweet):
 	tokens=kbbi(tokens)
 	tokens=stopwordDel(tokens)
 	return tokens
+def hapus_plus(tweet): 
+	if re.search('^tco',tweet): 
+		tweet=re.sub('^tco','',tweet)
+		return tweet
+	return tweet 
 def fitur_ekstraksi(inpTweet): 
 	tweets=[]
 	for row in inpTweet: 
@@ -59,8 +63,48 @@ def fitur_ekstraksi(inpTweet):
 		featureVector=get_fitur(pre_tweet)
 		tweets.append((featureVector,label))
 	return tweets
+def fitur_mentah(tweet): 
+	tweets=[]
+	for word in tweet: 
+		pre=preprocess(word)
+		fitur=get_fitur(pre)
+	return fitur
+def get_svm(tweets, featureList):
+    sortedFeatures = sorted(featureList)
+    map = {}
+    feature_vector = []
+    labels = []
+    for t in tweets:
+        label = 0
+        map = {}
+        #Initialize empty map
+        for w in sortedFeatures:
+            map[w] = 0
+        tweet_words = t[0]
+        tweet_opinion = t[1]
+        #Fill the map
+        for word in tweet_words:
+            #process the word (remove repetitions and punctuations)
+            word = word.strip('\'"?,.')
+            #set map[word] to 1 if word exists
+            if word in map:
+                map[word] = 1
+        #end for loop
+        values = map.values()
+        feature_vector.append(values)
+        if(tweet_opinion == 'positif'):
+            label = 0
+        elif(tweet_opinion == 'negatif'):
+            label = 1
+        elif(tweet_opinion == 'netral'):
+            label = 2
+        labels.append(label)
+    #return the list of feature_vector and labels
+    return {'feature_vector' : feature_vector, 'labels': labels}
+		
 def fiturlist_negatif(): 
-	pass
+	negatif=[word.strip('\n').strip('\r') for word in open('kamus/negatif_ta.txt')]
+	return negatif 
 def fiturlist_positif():
 	positif=[word.strip('\n').strip('\r') for word in open('kamus/positive_keyword.txt')]
 	return positif 
@@ -227,9 +271,13 @@ def stemming(token,dasar):
 					return token
 		return token 			
 if __name__ == '__main__':
-	fp = open('twiit.csv', 'r')
+	fp = open('tweet3000.csv', 'r')
 	line = fp.read()
 	inpTweets = csv.reader(open('twiit.csv', 'rb'), delimiter=';', quotechar='|')
-	
-	print fitur_ekstraksi(inpTweets)
-	
+	pre=preprocess(line)
+	fitur=get_fitur(pre)
+	negatif=fiturlist_negatif()
+	#print fitur_ekstraksi(inpTweets)
+	#print fiturlist_negatif()
+	#print len(sorted(negatif))
+	print get_svm(inpTweets,negatif)

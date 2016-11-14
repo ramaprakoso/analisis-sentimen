@@ -29,12 +29,18 @@ def fileprocess(filenameInput='tweet.xlsx',filenamePreprocess='data_pre.xlsx'):
     return dataPreprocessed
 """
 def preprocess(tweet):
+	#huruf kecil 
+	tweet=tweet.lower()
 	#hapus url 
-	tweet=hapus_url(tweet) 
-	#hapus tandabaca
+	tweet=re.sub(r'http\S+','',tweet)
+	#hapus @username
+	tweet=re.sub('@[^\s]+','',tweet)
+	#hapus #tagger 
+	tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
+	#hapus tanda baca
 	tweet=hapus_tanda(tweet)
-	#hapus angka 
-	tweet=hapus_angka(tweet)
+	#hapus angka dan angka yang berada dalam string 
+	tweet=re.sub(r'\w*\d\w*', '',tweet).strip()
 	"""
 	dasar=[line.strip('\n')for line in open('kamus/rootword.txt')]
 	nonKataDasar=list(set(tokens)-set(dasar))
@@ -43,6 +49,16 @@ def preprocess(tweet):
 		nonKataDasar[i]=stemming(nonKataDasar[i],dasar)
 	tokens=list(set(nonKataDasar+kataDasar))"""
 	return tweet   
+def hapus_tanda(tweet): 
+	tanda_baca = set(string.punctuation)
+	tweet = ''.join(ch for ch in tweet if ch not in tanda_baca)
+	return tweet
+def hapus_katadouble(w): 
+	pattern=re.compile(r"(.)\1{1,}",re.DOTALL)
+	return pattern.sub(r"\1\1",w)
+def tokenize(tweet): 
+	token=word_tokenize(tweet)
+	return token 
 def get_fitur(tweet): 
 	#token 
 	tokens=tokenize(tweet)
@@ -108,18 +124,7 @@ def fiturlist_negatif():
 def fiturlist_positif():
 	positif=[word.strip('\n').strip('\r') for word in open('kamus/positive_keyword.txt')]
 	return positif 
-def hapus_url(tweet): 
-	url=re.sub(r'http\S',"",tweet)
-	return url 
-def hapus_tanda(tweet):
-	tb=re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)","",tweet)
-	return tb
-def hapus_angka(tweet): 
-	angka=re.sub(r'\w*\d\w*', '',tweet).strip()
-	return angka 
-def tokenize(tweet): 
-	token=word_tokenize(tweet)
-	return token 
+
 def stopwordDel(token):
 	stopword=[word.strip('\n') for word in open('kamus/stopword.txt')] 
 	noise=[noise.strip('\n').strip('\r') for noise in open('kamus/noise.txt')]
@@ -277,7 +282,12 @@ if __name__ == '__main__':
 	pre=preprocess(line)
 	fitur=get_fitur(pre)
 	negatif=fiturlist_negatif()
+	#print line
+	#print preprocess(line)
+	print fitur
+	#print fitur_mentah(line)
 	#print fitur_ekstraksi(inpTweets)
 	#print fiturlist_negatif()
 	#print len(sorted(negatif))
-	print get_svm(inpTweets,negatif)
+	#print get_svm(inpTweets,negatif)
+	

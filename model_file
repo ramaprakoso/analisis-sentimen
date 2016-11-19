@@ -1,0 +1,11 @@
+svm_type c_svc
+kernel_type linear
+nr_class 3
+total_sv 3
+rho -1 1 1
+label 0 1 2
+nr_sv 1 1 1
+SV
+2 2 2:1 
+-2 1 1:1 2:1 
+-2 -1 

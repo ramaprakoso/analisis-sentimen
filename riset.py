@@ -111,7 +111,7 @@ fp = open('twiit.csv', 'r')
 line = fp.readline()
 
 st = open('stopword.txt', 'r')
-stopWords = getStopWordList('stopword.txt')
+stopWords = getStopWordList('kamus/stopword.txt')
 inpTweets = csv.reader(open('twiit.csv', 'rb'), delimiter=';', quotechar='|')
 count=0
 tweets = []
@@ -123,7 +123,7 @@ for row in inpTweets:
     featureVector = getFeatureVector(processedTweet, stopWords)
     featureList.extend(featureVector)
     tweets.append((featureVector, sentiment))
-	
+print featureVector
 	
 featureList = list(set(featureList))
 print getSVMFeatureVectorAndLabels(tweets,featureList)

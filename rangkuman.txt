@@ -1,0 +1,8 @@
+opinion mining in real world : 
+a. source the data reviews, blog etc:
+	1.crawl all daa store and search them 
+	2.crawl only the target data 
+b. aspect base opinion mining : 
+-group entity and aspect expression 
+moto=motorola, photo=picture 
+c.aspect based opinion mining (sentiment analysis)

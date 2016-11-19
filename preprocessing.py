@@ -2,6 +2,7 @@ import re,string
 import xlrd
 import openpyxl
 import csv
+from bs4 import BeautifulSoup
 from nltk.tokenize import word_tokenize
 """
 def fileprocess(filenameInput='tweet.xlsx',filenamePreprocess='data_pre.xlsx'):
@@ -29,8 +30,8 @@ def fileprocess(filenameInput='tweet.xlsx',filenamePreprocess='data_pre.xlsx'):
     return dataPreprocessed
 """
 def preprocess(tweet):
-	#huruf kecil 
-	tweet=tweet.lower()
+	#hapus_html 
+	#tweet=BeautifulSoup(tweet)
 	#hapus url 
 	tweet=re.sub(r'http\S+','',tweet)
 	#hapus @username
@@ -41,21 +42,20 @@ def preprocess(tweet):
 	tweet=hapus_tanda(tweet)
 	#hapus angka dan angka yang berada dalam string 
 	tweet=re.sub(r'\w*\d\w*', '',tweet).strip()
-	"""
-	dasar=[line.strip('\n')for line in open('kamus/rootword.txt')]
-	nonKataDasar=list(set(tokens)-set(dasar))
-	kataDasar=list(set(tokens)-set(nonKataDasar))
-	for i in range(0,len(nonKataDasar)): 
-		nonKataDasar[i]=stemming(nonKataDasar[i],dasar)
-	tokens=list(set(nonKataDasar+kataDasar))"""
+	#hapus repetisi karakter 
+	tweet=hapus_katadouble(tweet)
+	
 	return tweet   
 def hapus_tanda(tweet): 
 	tanda_baca = set(string.punctuation)
 	tweet = ''.join(ch for ch in tweet if ch not in tanda_baca)
 	return tweet
-def hapus_katadouble(w): 
-	pattern=re.compile(r"(.)\1{1,}",re.DOTALL)
-	return pattern.sub(r"\1\1",w)
+def hapus_katadouble(s): 
+    #look for 2 or more repetitions of character and replace with the character itself
+    pattern = re.compile(r"(.)\1{1,}", re.DOTALL)
+    return pattern.sub(r"\1\1", s)
+def hapus_html(tweet):
+	pass
 def tokenize(tweet): 
 	token=word_tokenize(tweet)
 	return token 
@@ -64,12 +64,14 @@ def get_fitur(tweet):
 	tokens=tokenize(tweet)
 	tokens=kbbi(tokens)
 	tokens=stopwordDel(tokens)
-	return tokens
-def hapus_plus(tweet): 
-	if re.search('^tco',tweet): 
-		tweet=re.sub('^tco','',tweet)
-		return tweet
-	return tweet 
+	dasar=[line.strip('\n')for line in open('kamus/rootword.txt')]
+	nonKataDasar=list(set(tokens)-set(dasar))
+	kataDasar=list(set(tokens)-set(nonKataDasar))
+	for i in range(0,len(nonKataDasar)): 
+		nonKataDasar[i]=stemming(nonKataDasar[i],dasar)
+	tokens=list(set(nonKataDasar+kataDasar))
+	#tokens=filter_fitur(tokens)
+	return tokens 
 def fitur_ekstraksi(inpTweet): 
 	tweets=[]
 	for row in inpTweet: 
@@ -85,46 +87,16 @@ def fitur_mentah(tweet):
 		pre=preprocess(word)
 		fitur=get_fitur(pre)
 	return fitur
-def get_svm(tweets, featureList):
-    sortedFeatures = sorted(featureList)
-    map = {}
-    feature_vector = []
-    labels = []
-    for t in tweets:
-        label = 0
-        map = {}
-        #Initialize empty map
-        for w in sortedFeatures:
-            map[w] = 0
-        tweet_words = t[0]
-        tweet_opinion = t[1]
-        #Fill the map
-        for word in tweet_words:
-            #process the word (remove repetitions and punctuations)
-            word = word.strip('\'"?,.')
-            #set map[word] to 1 if word exists
-            if word in map:
-                map[word] = 1
-        #end for loop
-        values = map.values()
-        feature_vector.append(values)
-        if(tweet_opinion == 'positif'):
-            label = 0
-        elif(tweet_opinion == 'negatif'):
-            label = 1
-        elif(tweet_opinion == 'netral'):
-            label = 2
-        labels.append(label)
-    #return the list of feature_vector and labels
-    return {'feature_vector' : feature_vector, 'labels': labels}
-		
-def fiturlist_negatif(): 
+def list_negatif(): 
 	negatif=[word.strip('\n').strip('\r') for word in open('kamus/negatif_ta.txt')]
 	return negatif 
-def fiturlist_positif():
-	positif=[word.strip('\n').strip('\r') for word in open('kamus/positive_keyword.txt')]
-	return positif 
-
+def list_positif():
+	positif=[word.strip('\n').strip('\r') for word in open('kamus/positif_ta.txt')]
+	return positif
+def filter_negatif():
+	pass
+def filter_positif(): 
+	pass
 def stopwordDel(token):
 	stopword=[word.strip('\n') for word in open('kamus/stopword.txt')] 
 	noise=[noise.strip('\n').strip('\r') for noise in open('kamus/noise.txt')]
@@ -133,6 +105,14 @@ def stopwordDel(token):
 		if token[i] not in stopword and token[i] not in noise: 
 			tampung.append(token[i])
 	return tampung
+def filter_fitur(token): 
+	negatif=[word.strip('\n').strip('\r') for word in open('kamus/negatif_ta.txt')]
+	positif=[word.strip('\n').strip('\r') for word in open('kamus/positif_ta.txt')]
+	t=[]
+	for i in range(0,len(token)): 
+		if token[i] in negatif or token[i] in positif: 
+			t.append(token[i])
+	return t
 def kbbi(token): 
 	kbba=[kamus.strip('\n').strip('\r') for kamus in open('kamus/kbba.txt')]
 	#ubah list menjadi dictionary 
@@ -229,8 +209,13 @@ def awalanKedua(token):
 		return token 
 	if re.search('^belajar',token):
 		token=re.sub('^belajar','ajar',token)
-		return token 
-	
+		return token
+	if re.search('^berhasil',token):
+		token=re.sub('^berhasil','berhasil',token)
+		return token	
+	if re.search('^pensiun',token):
+		token=re.sub('^pensiun','pensiunmen',token)
+		return token  
 	#if re.search('^bek+er',token): 
 	#	token=re.sub('^bek+er','ker',token)
 	#	return token 
@@ -274,20 +259,27 @@ def stemming(token,dasar):
 				token = awalanKedua(token)
 				if token in dasar :
 					return token
-		return token 			
+		return token 		
+		
+"""			
 if __name__ == '__main__':
 	fp = open('tweet3000.csv', 'r')
 	line = fp.read()
 	inpTweets = csv.reader(open('twiit.csv', 'rb'), delimiter=';', quotechar='|')
 	pre=preprocess(line)
 	fitur=get_fitur(pre)
-	negatif=fiturlist_negatif()
+	negatif=filter_negatif()
+	positif=filter_positif()
+	print positif
+	#print len(positif)
+	#print len(negatif)
+	#print fitur
 	#print line
 	#print preprocess(line)
-	print fitur
 	#print fitur_mentah(line)
 	#print fitur_ekstraksi(inpTweets)
 	#print fiturlist_negatif()
 	#print len(sorted(negatif))
 	#print get_svm(inpTweets,negatif)
 	
+"""

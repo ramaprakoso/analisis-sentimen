@@ -1272,6 +1272,7 @@ capek	lelah
 kurng	kurang
 bajir	banjir
 ista	nista
+istaa	nista
 less	kurang
 bebal	bodoh
 koar	teriak

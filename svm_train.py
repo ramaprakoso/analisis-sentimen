@@ -8,6 +8,7 @@ samples=[[0, 1, 0], [1, 1, 1], [1, 1, 0], [0, 0, 0]]
 param=svm_parameter()
 param.C=10 
 param.kernel_type=LINEAR 
+param.kernel_type=LINEAR 
 #instantiate the problem 
 problem=svm_problem(labels,samples)
 model=svm_train(problem,param)

@@ -1271,6 +1271,7 @@ capek	lelah
 kurng	kurang
 bajir	banjir
 ista	nista
+istaa	nista
 less	kurang
 bebal	bodoh
 koar	teriak
@@ -1300,3 +1301,4 @@ uasai	kuasa
 vote	pilih
 mnolak	tolak
 menolak	tolak
+trending	trend

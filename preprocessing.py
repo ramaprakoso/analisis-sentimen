@@ -1,4 +1,5 @@
 import re,string
+import nltk
 import xlrd
 import openpyxl
 import csv
@@ -59,10 +60,14 @@ def hapus_html(tweet):
 def tokenize(tweet): 
 	token=word_tokenize(tweet)
 	return token 
+def tokenize_freq(tweet): 
+	words=nltk.tokenize.word_tokenize(tweet)
+	fdist=FreqDist(words)
+	return fdist
 def get_fitur(tweet): 
 	#token 
 	tokens=tokenize(tweet)
-	tokens=kbbi(tokens)
+	#tokens=kbbi(tokens)
 	tokens=stopwordDel(tokens)
 	dasar=[line.strip('\n')for line in open('kamus/rootword.txt')]
 	nonKataDasar=list(set(tokens)-set(dasar))
@@ -70,6 +75,7 @@ def get_fitur(tweet):
 	for i in range(0,len(nonKataDasar)): 
 		nonKataDasar[i]=stemming(nonKataDasar[i],dasar)
 	tokens=list(set(nonKataDasar+kataDasar))
+	tokens=kbbi(tokens)
 	#tokens=filter_fitur(tokens)
 	return tokens 
 def fitur_ekstraksi(inpTweet): 
@@ -86,7 +92,8 @@ def fitur_mentah(tweet):
 	for word in tweet: 
 		pre=preprocess(word)
 		fitur=get_fitur(pre)
-	return fitur
+		tweets.append(fitur)
+	return tweets
 def list_negatif(): 
 	negatif=[word.strip('\n').strip('\r') for word in open('kamus/negatif_ta.txt')]
 	return negatif 

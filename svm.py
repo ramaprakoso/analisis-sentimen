@@ -40,5 +40,4 @@ if __name__ == '__main__':
 	inpTweets = csv.reader(open('twiit.csv', 'rb'), delimiter=';', quotechar='|')
 	pre=preprocessing.preprocess(line)
 	fitur=preprocessing.get_fitur(pre)
-	print fitur
 	#print getSVMFeatureLabel(inpTweets,fitur)

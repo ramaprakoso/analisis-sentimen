@@ -76,7 +76,7 @@ def get_fitur(tweet):
 		nonKataDasar[i]=stemming(nonKataDasar[i],dasar)
 	tokens=list(set(nonKataDasar+kataDasar))
 	tokens=kbbi(tokens)
-	#tokens=filter_fitur(tokens)
+	tokens=filter_fitur(tokens)
 	return tokens 
 def fitur_ekstraksi(inpTweet): 
 	tweets=[]

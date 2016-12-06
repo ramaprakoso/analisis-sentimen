@@ -1,6 +1,7 @@
 import preprocessing
 import csv
 from sklearn.feature_extraction.text import CountVectorizer 
+from sklearn.feature_extraction.text import TfidfVectorizer 
 
 myvocab=['ahli','anggun','ganteng','santun','cocok']
 """
@@ -16,8 +17,6 @@ bahan=[
 inpTweets = csv.reader(open('twiit.csv', 'rb'), delimiter=';', quotechar='|')
 ekstraksi_fitur=preprocessing.fitur_ekstraksi(inpTweets)
 vectorizer=TfidfVectorizer(input='content')
-=vectorizer.fit_transform(featureVector)
-
 
 
 vektor=CountVectorizer(vocabulary=myvocab)

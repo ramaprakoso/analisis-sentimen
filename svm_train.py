@@ -1,22 +1,11 @@
-import svm 
-from svmutil import * 
+from sklearn.feature_extraction.text import TfidfVectorizer 
 
-#training data 
-labels=[0,1,1,2]
-samples=[[0, 1, 0], [1, 1, 1], [1, 1, 0], [0, 0, 0]]
+vocabulary = "a list of words I want to look for in the documents".split()
+vect = TfidfVectorizer(sublinear_tf=True, max_df=0.5, analyzer='word', 
+           stop_words='english', vocabulary=vocabulary)
 
-param=svm_parameter()
-param.C=10 
-param.kernel_type=LINEAR 
-param.kernel_type=LINEAR 
-#instantiate the problem 
-problem=svm_problem(labels,samples)
-model=svm_train(problem,param)
+vect.fit(corpus)
+vect.fit(corpus)
+corpus_tf_idf = vect.transform(corpus) 
 
-svm_save_model('model_file',model)
-
-testing=[[0,1,1],[1,0,1]]
-p_labels, p_accs, p_vals = svm_predict([0]*len(test_data), test_data, model)
-print p_labels
-print p_accs
-print p_vals
+print corpus_tf_idf

@@ -1302,3 +1302,5 @@ vote	pilih
 mnolak	tolak
 menolak	tolak
 trending	trend
+presh	segar
+taik	tahi

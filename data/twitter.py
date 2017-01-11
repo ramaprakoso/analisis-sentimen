@@ -14,7 +14,7 @@ class listener(StreamListener):
 			tweet=data.split(',"text":"')[1].split('","source')[0]
 			saveThis=tweet.lower()
 			print saveThis
-			simpanFile=open('anies.csv','a')
+			simpanFile=open('anies212.csv','a')
 			simpanFile.write(saveThis)
 			simpanFile.write('\n')
 			simpanFile.close()

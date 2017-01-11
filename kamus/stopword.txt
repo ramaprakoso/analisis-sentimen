@@ -39,7 +39,6 @@ berbagai
 bersama
 bila
 bisa
-bukan
 bagai
 bagaikan
 bagaimanakah
@@ -338,6 +337,7 @@ sudahkah
 sudahlah
 supaya
 tak
+tidak
 tandas
 tandasnya
 tanpa
@@ -353,7 +353,6 @@ tersebut
 terus
 tetap
 tetapi
-tidak
 tadi
 tadinya
 tentu

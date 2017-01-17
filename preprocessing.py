@@ -1,10 +1,6 @@
 import re,string
 import nltk
-import xlrd
-import openpyxl
 import csv
-from bs4 import BeautifulSoup
-from nltk.tokenize import word_tokenize
 import numpy as np 
 """
 def fileprocess(filenameInput='tweet.xlsx',filenamePreprocess='data_pre.xlsx'):
@@ -71,7 +67,6 @@ def get_fitur(tweets):
 	tokens=tweets.split()
 	tokens=kbbi(tokens)
 	tokens=get_stemming(tokens)
-	tokens=stopwordDel(tokens)
 	return tokens 
 def kbbi(token): 
 	kbba=[kamus.strip('\n').strip('\r') for kamus in open('kamus/kbba.txt')]

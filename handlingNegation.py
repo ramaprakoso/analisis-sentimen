@@ -1,22 +1,3 @@
-"""
-def negasiHandling(text):
-	kata_negatif=["korupsi","jahat","marah"]
-	kata_positif=["bersih","sehat","bahagia"]
-	delims="?.,!:;"
-	result=[]
-	positif=None
-	negatif=None
-	for kalimat in text: 
-		kata=kalimat.split()
-		negasi="tidak"+" "+kata
-		if kata in kata_positif : 
-			negasi=
-		
-		 
-		
-text=["ahok tidak korupsi","ahok tidak bersih"]
-print negasiHandling(text)
-"""
 def negate_sequence(text):
     negation = False
     delims = "?.,!:;"
@@ -26,7 +7,7 @@ def negate_sequence(text):
     pprev = None
     for word in words:
         stripped = word.strip(delims).lower()
-        negated = "tidak" + stripped if negation else stripped
+        negated = "not_" + stripped if negation else stripped
         result.append(negated)
         if prev:
             bigram = prev + " " + negated
@@ -37,7 +18,7 @@ def negate_sequence(text):
             pprev = prev
         prev = negated
 
-        if any(neg in word for neg in ["tidak", "bukan"]):
+        if any(neg in word for neg in ["not", "n't", "no"]):
             negation = not negation
 
         if any(c in word for c in delims):
@@ -45,4 +26,35 @@ def negate_sequence(text):
 
     return result
 
-
+if __name__ == '__main__': 
+	text=[   'i',
+    'am',
+    'i am',
+    'not',
+    'am not',
+    'i am not',
+    'not_happy',
+    'not not_happy',
+    'am not not_happy',
+    'not_today',
+    'not_happy not_today',
+    'not not_happy not_today',
+    'and',
+    'not_today and',
+    'not_happy not_today and',
+    'i',
+    'and i',
+    'not_today and i',
+    'am',
+    'i am',
+    'and i am',
+    'not',
+    'am not',
+    'i am not',
+    'not_feeling',
+    'not not_feeling',
+    'am not not_feeling',
+    'not_well',
+    'not_feeling not_well',
+    'not not_feeling not_well']
+	print negate_sequence(text)

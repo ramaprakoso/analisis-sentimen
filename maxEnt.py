@@ -35,8 +35,8 @@ X_train=vectorizer.fit_transform(X_train)
 X_test=vectorizer.transform(X_test)
 
 print "Load classifier ... "
-classifier=linear_model.LogisticRegression()
-classifier.fit(X_train,y_train)
+MaxEnt=linear_model.MaximumEntropy()
+MaxEnt.fit(X_train,y_train)
 
-prediction=classifier.predict(X_test)
+prediction=MaxEnt.predict(X_test)
 print prediction

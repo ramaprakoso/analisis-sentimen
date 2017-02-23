@@ -1,12 +1,17 @@
 import preprocessing 
 import pandas as pd
 import csv
+import collections
 from sklearn import svm 
 from sklearn import linear_model 
 from sklearn.metrics import accuracy_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn import svm 
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+
 
 print "loading dictionary ... "
 
@@ -34,9 +39,18 @@ vectorizer = TfidfVectorizer(max_df=1.0, max_features=10000,
 X_train=vectorizer.fit_transform(X_train)
 X_test=vectorizer.transform(X_test)
 
+
 print "Load classifier ... "
 MaxEnt=linear_model.MaximumEntropy()
 MaxEnt.fit(X_train,y_train)
 
-prediction=MaxEnt.predict(X_test)
-print prediction
+weighted_prediction=MaxEnt.predict(X_test)
+print collections.Counter(weighted_prediction)	 
+
+#print 'Accuracy:', accuracy_score(y_test, weighted_prediction)
+"""
+print 'F1 score:', f1_score(y_test, weighted_prediction,average='weighted')
+print 'Recall:', recall_score(y_test, weighted_prediction, average='weighted')
+"""
+#print 'Precision:', precision_score(y_test, weighted_prediction,
+ #                                   average='weighted')

@@ -1,4 +1,4 @@
-# Natural Language Toolkit: Interface to scikit-learn classifiers
+    # Natural Language Toolkit: Interface to scikit-learn classifiers
 #
 # Author: Lars Buitinck <L.J.Buitinck@uva.nl>
 # URL: <http://nltk.org/>

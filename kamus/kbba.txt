@@ -1304,3 +1304,4 @@ menolak	tolak
 trending	trend
 presh	segar
 taik	tahi
+serasiii	serasi

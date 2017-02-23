@@ -1,13 +1,11 @@
-import preprocessing
-import xlrd 
-from openpyxl import Workbook
-from openpyxl import load_workbook
-from xlrd import open_workbook
-import csv
+import preprocessing 
+import csv 
 
-fp = open('tweet3000.csv', 'r')
-line = fp.read()
-inpTweets = csv.reader(open('twiit.csv', 'rb'), delimiter=';', quotechar='|')
-pre=preprocessing.preprocess(line)
-fitur=preprocessing.fitur_ekstraksi(pre)
-print fitur 
+#file yang dibuka
+with open('datafix/ahok.csv','r') as f:
+	tweet=f.read()
+	tweet=preprocessing.preprocess(tweet)
+#file yang ditulis tidak usah bikin nama filnya kalau write dia nulis sendiri 
+with open('datafix/ahokbersih.csv','w') as fp : 
+	fp.write(tweet)
+	fp.close()

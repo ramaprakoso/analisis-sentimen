@@ -49,13 +49,14 @@ precision_score=cross_val_score(clf,X_train,y_train,cv=skf,scoring='precision')
 recall_score=cross_val_score(clf, X_train,y_train, cv=skf, scoring ='recall')
 
 #scoring 
+"""
 print "Precision :%0.2f"%precision_score.mean()
 print "Recall :%0.2f"%recall_score.mean()
 print "Accuracy :%0.2f"%scores.mean()
-
+"""
 #prosentase grafik
 weighted_prediction=clf.predict(X_test)
-
+print weighted_prediction
 """
 c=Counter(weighted_prediction)
 plt.bar(c.keys(),c.values())

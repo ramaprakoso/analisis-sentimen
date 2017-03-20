@@ -15,7 +15,7 @@ class listener(StreamListener):
 			tweet=data.split(',"text":"')[1].split('","source')[0]
 			saveThis=tweet.lower()
 			print saveThis
-			simpanFile=open('ahok23feb.csv','a')
+			simpanFile=open('anies20maret2017.csv','a')
 			simpanFile.write(saveThis)
 			simpanFile.write('\n')
 			simpanFile.close()
@@ -25,5 +25,5 @@ class listener(StreamListener):
 auth = OAuthHandler(ckey, csecret)
 auth.set_access_token(atoken, asecret)
 twitterStream = Stream(auth, listener())
-twitterStream.filter(track=["basuki_btp"])
+twitterStream.filter(track=["aniesbaswedan"])
 

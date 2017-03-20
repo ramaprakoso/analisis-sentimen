@@ -28,6 +28,7 @@ def fileprocess(filenameInput='tweet.xlsx',filenamePreprocess='data_pre.xlsx'):
     return dataPreprocessed
 """
 def preprocess(tweet):
+	tweet=tweet.lower()
 	tweet=re.sub(r'http\S+','',tweet)
 	#hapus @username
 	tweet=re.sub('@[^\s]+','',tweet)
@@ -66,7 +67,7 @@ def get_stemming(tokens):
 def get_fitur(tweets):
 	tokens=tweets.split()
 	tokens=kbbi(tokens)
-	tokens=get_stemming(tokens)
+	#tokens=get_stemming(tokens)
 	return tokens 
 def kbbi(token): 
 	kbba=[kamus.strip('\n').strip('\r') for kamus in open('kamus/kbba.txt')]

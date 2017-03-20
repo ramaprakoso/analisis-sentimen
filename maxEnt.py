@@ -23,8 +23,8 @@ stop_words = [unicode(x.strip(), 'utf-8') for x in open('kamus/stopword.txt','r'
 noise = [unicode(x.strip(), 'utf-8') for x in open('kamus/noise.txt','r').read().split('\n')]
 stop_words.extend(noise)
 
-train_df_raw = pd.read_csv('dataset/train.csv',sep=';',names=['tweets','label'],header=None)
-test_df_raw = pd.read_csv('dataset/testing.csv',sep=';',names=['tweets','label'],header=None)
+train_df_raw = pd.read_csv('training.csv',sep=';',names=['tweets','label'],header=None)
+test_df_raw = pd.read_csv('testing.csv',sep=';',names=['tweets','label'],header=None)
 train_df_raw = train_df_raw[train_df_raw['tweets'].notnull()]
 test_df_raw = test_df_raw[test_df_raw['tweets'].notnull()]
 
@@ -61,6 +61,41 @@ print "Accuracy :%0.2f" % scores.mean()
 #print collections.Counter(weighted_prediction)	 
 labels, values = zip(*Counter(weighted_prediction).items())
 
+SentimenPositif=values[1]
+SentimenNegatif=values[0]
+#SentimenPositif.append(values[1])
+#SentimenNegatif.append(values[0])
+
+
+ind=np.arange(1)
+width=0.8
+#fig = plt.figure()
+ax = plt.subplot(111)
+
+
+yvals = SentimenPositif
+rects1 = ax.bar(ind, yvals, width, color='blue')
+zvals = SentimenNegatif
+rects2 = ax.bar(ind+width, zvals, width, color='red')
+ax.set_ylabel("Frequency")
+
+ax.set_xticks(ind+width)
+ax.set_xticklabels(("Ahok","Agus","Anies"))
+ax.legend((rects1[0], rects2[0]), ('Positif', 'Negatif'))
+
+for rect in rects1:
+	h = rect.get_height()
+	ax.text(rect.get_x()+rect.get_width()/2,1*h, '%d'%int(h),ha='center',va='bottom') 
+
+for rect in rects2:
+	h = rect.get_height()
+	ax.text(rect.get_x()+rect.get_width()/2,1*h, '%d'%int(h),ha='center',va='bottom') 
+
+#plt.axis([0,10, 0,300])
+plt.title("Grafik Analisis Sentimen")
+plt.show()
+
+"""
 indexes=np.arange(len(labels))
 width=0.9
 
@@ -74,7 +109,10 @@ plt.xticks(indexes + width * 0.5, labels)
 plt.ylabel('Scores')
 plt.xlabel('Label')
 plt.plot(kind='bar')
+plt.axis([0,10, 0,500])
+plt.legend(('Negatif', 'Negatif'))
 plt.show()
+"""
 
 #print 'Accuracy:', accuracy_score(y_test, weighted_prediction)
 """

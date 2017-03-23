@@ -23,8 +23,8 @@ stop_words = [unicode(x.strip(), 'utf-8') for x in open('kamus/stopword.txt','r'
 noise = [unicode(x.strip(), 'utf-8') for x in open('kamus/noise.txt','r').read().split('\n')]
 stop_words.extend(noise)
 
-train_df_raw = pd.read_csv('training.csv',sep=';',names=['tweets','label'],header=None)
-test_df_raw = pd.read_csv('testing.csv',sep=';',names=['tweets','label'],header=None)
+train_df_raw = pd.read_csv('dataset_final/training90.csv',sep=';',names=['tweets','label'],header=None)
+test_df_raw = pd.read_csv('dataset_final/testing30.csv',sep=';',names=['tweets','label'],header=None)
 train_df_raw = train_df_raw[train_df_raw['tweets'].notnull()]
 test_df_raw = test_df_raw[test_df_raw['tweets'].notnull()]
 

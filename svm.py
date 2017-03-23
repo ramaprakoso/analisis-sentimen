@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+import pickle 
 from sklearn import svm 
 from collections import Counter
 from sklearn.metrics import accuracy_score
@@ -23,8 +24,8 @@ print "Complate"
 print "\n"
 print "\n"
 print "Preparing data ..."
-train_df_raw = pd.read_csv('training.csv',sep=';',names=['tweets','label'],header=None)
-test_df_raw = pd.read_csv('testing.csv',sep=';',names=['tweets','label'],header=None)
+train_df_raw = pd.read_csv('dataset_final/training70.csv',sep=';',names=['tweets','label'],header=None)
+test_df_raw = pd.read_csv('dataset_final/testing10.csv',sep=';',names=['tweets','label'],header=None)
 train_df_raw = train_df_raw[train_df_raw['tweets'].notnull()]
 test_df_raw = test_df_raw[test_df_raw['tweets'].notnull()]
 print "Complate"
@@ -46,12 +47,17 @@ X_test=vectorizer.transform(X_test)
 print "Complate"
 print "\n"
 print "classfication ..."
-clf=svm.SVC(kernel='poly',gamma=1)
+clf=svm.SVC(kernel='linear',gamma=1)
 clf.fit(X_train,y_train)
+
+#saving training 
+#filesave='training_svm.sav'
+#pickle.dump(clf,open(filesave,'wb'))
+#clf = pickle.load(open(filesave, 'rb'))
 print "Complate"
 print "\n"
 #train model 
-skf=StratifiedKFold(n_splits=2,random_state=0)
+skf=StratifiedKFold(n_splits=4,random_state=0)
 scores=cross_val_score(clf,X_train,y_train,cv=skf)
 precision_score=cross_val_score(clf,X_train,y_train,cv=skf,scoring='precision')
 recall_score=cross_val_score(clf, X_train,y_train, cv=skf, scoring ='recall')
@@ -64,7 +70,7 @@ print "Accuracy :%0.2f"%scores.mean()
 
 #prosentase grafik
 weighted_prediction=clf.predict(X_test)
-
+print len(weighted_prediction)
 
 """
 c=Counter(weighted_prediction)
@@ -110,6 +116,7 @@ for rect in rects2:
 #plt.axis([0,10, 0,300])
 plt.title("Grafik Analisis Sentimen")
 plt.show()
+
 """
 plt.bar(indexes, values, width,color=['red', 'blue'])
 labels=list(labels)

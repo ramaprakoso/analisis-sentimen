@@ -67,7 +67,7 @@ def get_stemming(tokens):
 def get_fitur(tweets):
 	tokens=tweets.split()
 	tokens=kbbi(tokens)
-	#tokens=get_stemming(tokens)
+	tokens=get_stemming(tokens)
 	return tokens 
 def kbbi(token): 
 	kbba=[kamus.strip('\n').strip('\r') for kamus in open('kamus/kbba.txt')]

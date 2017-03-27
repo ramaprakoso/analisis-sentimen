@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 import collections
+import pickle 
 from collections import Counter
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn import svm 
@@ -24,14 +25,16 @@ noise = [unicode(x.strip(), 'utf-8') for x in open('kamus/noise.txt','r').read()
 stop_words.extend(noise)
 
 train_df_raw = pd.read_csv('dataset_final/training90.csv',sep=';',names=['tweets','label'],header=None)
-test_df_raw = pd.read_csv('dataset_final/testing30.csv',sep=';',names=['tweets','label'],header=None)
+test_df_raw = pd.read_csv('dataset_final/testing10.csv',sep=';',names=['tweets','label'],header=None)
 train_df_raw = train_df_raw[train_df_raw['tweets'].notnull()]
 test_df_raw = test_df_raw[test_df_raw['tweets'].notnull()]
 
 #ekstrak make training and testing 
 X_train=train_df_raw['tweets'].tolist()
 X_test=test_df_raw['tweets'].tolist()
-y_train=[x if x==1 else 0 for x in train_df_raw['label'].tolist()]
+y_train=[x if x==0 else 1 for x in train_df_raw['label'].tolist()]
+
+#tanpa cross validation , manual label 
 #y_test=[x if x=='1' else '0' for x in test_df_raw['label'].tolist()]
 
 vectorizer = TfidfVectorizer(max_df=1.0, max_features=10000,
@@ -46,16 +49,21 @@ X_test=vectorizer.transform(X_test)
 print "Load classifier ... "
 MaxEnt=linear_model.MaximumEntropy()
 MaxEnt.fit(X_train,y_train)
+
+#saving training
+filesave='save_train/maxentfold5.sav'
+pickle.dump(MaxEnt,open(filesave,'wb'))
 weighted_prediction=MaxEnt.predict(X_test)
 
 print "Count Accuracy ... "
-skf=StratifiedKFold(n_splits=2,random_state=0)
+skf=StratifiedKFold(n_splits=5,random_state=0)
 scores=cross_val_score(MaxEnt,X_train,y_train,cv=skf)
 precision_score=cross_val_score(MaxEnt,X_train,y_train,cv=skf,scoring='precision')
 recall_score=cross_val_score(MaxEnt, X_train,y_train, cv=skf, scoring ='recall')
 
-print "Precision :%0.2f"%precision_score.mean()
+
 print "Recall :%0.2f"%recall_score.mean()
+print "Precision :%0.2f"%precision_score.mean()
 print "Accuracy :%0.2f" % scores.mean()
 
 #print collections.Counter(weighted_prediction)	 

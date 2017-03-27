@@ -24,7 +24,7 @@ print "Complate"
 print "\n"
 print "\n"
 print "Preparing data ..."
-train_df_raw = pd.read_csv('dataset_final/training70.csv',sep=';',names=['tweets','label'],header=None)
+train_df_raw = pd.read_csv('dataset_final/training90.csv',sep=';',names=['tweets','label'],header=None)
 test_df_raw = pd.read_csv('dataset_final/testing10.csv',sep=';',names=['tweets','label'],header=None)
 train_df_raw = train_df_raw[train_df_raw['tweets'].notnull()]
 test_df_raw = test_df_raw[test_df_raw['tweets'].notnull()]
@@ -35,6 +35,8 @@ print "\n"
 X_train=train_df_raw['tweets'].tolist()
 X_test=test_df_raw['tweets'].tolist()
 y_train=[x if x==1 else 0 for x in train_df_raw['label'].tolist()]
+
+#tanpa cross validation , manual label 
 #y_test=[x if x=='positif' else 'negatif' for x in test_df_raw['label'].tolist()]
 
 print "Pipelining process ..."
@@ -49,23 +51,21 @@ print "\n"
 print "classfication ..."
 clf=svm.SVC(kernel='linear',gamma=1)
 clf.fit(X_train,y_train)
-
-#saving training 
-#filesave='training_svm.sav'
-#pickle.dump(clf,open(filesave,'wb'))
+filesave='save_train/svmfold5.sav'
+pickle.dump(clf,open(filesave,'wb'))
 #clf = pickle.load(open(filesave, 'rb'))
 print "Complate"
 print "\n"
 #train model 
-skf=StratifiedKFold(n_splits=4,random_state=0)
+skf=StratifiedKFold(n_splits=5,random_state=0)
 scores=cross_val_score(clf,X_train,y_train,cv=skf)
 precision_score=cross_val_score(clf,X_train,y_train,cv=skf,scoring='precision')
 recall_score=cross_val_score(clf, X_train,y_train, cv=skf, scoring ='recall')
 
 #scoring 
 print "Result ..."
-print "Precision :%0.2f"%precision_score.mean()
 print "Recall :%0.2f"%recall_score.mean()
+print "Precision :%0.2f"%precision_score.mean()
 print "Accuracy :%0.2f"%scores.mean()
 
 #prosentase grafik

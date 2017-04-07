@@ -1287,6 +1287,7 @@ taik	kotoran
 tahi	kotoran
 tai	kotoran
 tirani	tiran
+pls	tolong
 tilep	tilap
 accord	sesuai
 happy	bahagia
@@ -1305,3 +1306,14 @@ trending	trend
 presh	segar
 taik	tahi
 serasiii	serasi
+wkwkkw	tertawa
+soft	halus
+setting	atur
+angis	nangis
+ahokncc	ahok
+almaidahyg	almaidah
+istaa	nista
+benarjujur	benar
+benarjujur	jujur
+sayan	sayang
+mgkin	mungkin

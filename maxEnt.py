@@ -31,28 +31,42 @@ test_df_raw = test_df_raw[test_df_raw['tweets'].notnull()]
 
 #ekstrak make training and testing 
 X_train=train_df_raw['tweets'].tolist()
+
 X_test=test_df_raw['tweets'].tolist()
 y_train=[x if x==0 else 1 for x in train_df_raw['label'].tolist()]
 
 #tanpa cross validation , manual label 
 #y_test=[x if x=='1' else '0' for x in test_df_raw['label'].tolist()]
 
-vectorizer = TfidfVectorizer(max_df=1.0, max_features=10000,
+vectorizer = TfidfVectorizer(max_df=1.0, max_features=2000,
                              min_df=0, preprocessor=preprocessing.preprocess,
                              stop_words=stop_words,tokenizer=preprocessing.get_fitur
                             )
 
-X_train=vectorizer.fit_transform(X_train)
-X_test=vectorizer.transform(X_test)
+X_train=vectorizer.fit_transform(X_train).toarray()
+X_test=vectorizer.transform(X_test).toarray()
 
-
+#fitur 
+feature_names=vectorizer.get_feature_names()
+# idf=vectorizer.idf_
+#tampilkan fitur 
+#print feature_names
+#jumlah fitur 
+print len(feature_names)
+#menampilkan fitur yang sudah di tf-idf 
+# print dict(zip(vectorizer.get_feature_names(), idf))
+# print len(vectorizer.get_feature_names(),idf)
 print "Load classifier ... "
-MaxEnt=linear_model.MaximumEntropy()
+#setting multinomial sebagai entropy 
+MaxEnt=linear_model.MaximumEntropy(max_iter=1000,multi_class='multinomial',solver='lbfgs')
+#print MaxEnt
 MaxEnt.fit(X_train,y_train)
 
+
+
 #saving training
-filesave='save_train/maxentfold5.sav'
-pickle.dump(MaxEnt,open(filesave,'wb'))
+#filesave='save_train/maxentfold5.sav'
+#pickle.dump(MaxEnt,open(filesave,'wb'))
 weighted_prediction=MaxEnt.predict(X_test)
 
 print "Count Accuracy ... "
